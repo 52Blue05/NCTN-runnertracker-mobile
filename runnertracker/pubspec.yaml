@@ -1,5 +1,5 @@
-name: runnertracker
-description: "A new Flutter project."
+name: runner_tracker
+description: "Mobile frontend for Runner Tracker."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -34,6 +34,16 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  dio: ^5.9.2
+  flutter_riverpod: ^3.3.2
+  google_maps_flutter: ^2.14.2
+  geolocator: ^14.0.2
+  flutter_background_service: ^5.1.0
+  pedometer: ^4.2.0
+  flutter_secure_storage: ^10.3.1
+  sqflite: ^2.4.2
+  intl: ^0.20.2
+  go_router: ^17.2.3
 
 dev_dependencies:
   flutter_test:
