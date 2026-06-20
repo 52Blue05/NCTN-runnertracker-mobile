@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../tracking/screen/tracking_screen.dart';
 import '../provider/auth_provider.dart';
 import 'register_screen.dart';
 
@@ -227,6 +228,16 @@ class _LoggedInPanel extends ConsumerWidget {
           style: const TextStyle(color: AppColors.textSecondary),
         ),
         const SizedBox(height: 24),
+        FilledButton.icon(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const TrackingScreen()),
+            );
+          },
+          icon: const Icon(Icons.map_outlined),
+          label: const Text('Mở bản đồ'),
+        ),
+        const SizedBox(height: 12),
         OutlinedButton(
           onPressed: () => ref.read(authProvider.notifier).logout(),
           child: const Text('Đăng xuất'),

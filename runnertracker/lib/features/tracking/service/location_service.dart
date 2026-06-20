@@ -1,6 +1,11 @@
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
+  static const LocationSettings defaultLocationSettings = LocationSettings(
+    accuracy: LocationAccuracy.bestForNavigation,
+    distanceFilter: 5,
+  );
+
   Future<bool> ensurePermission() async {
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -16,18 +21,19 @@ class LocationService {
         permission == LocationPermission.whileInUse;
   }
 
-  Future<Position> getCurrentPosition() {
+  Future<Position> getCurrentPosition({LocationSettings? locationSettings}) {
     return Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.best),
+      locationSettings: locationSettings ?? defaultLocationSettings,
+    );
+  }
+
+  Stream<Position> getPositionStream({LocationSettings? locationSettings}) {
+    return Geolocator.getPositionStream(
+      locationSettings: locationSettings ?? defaultLocationSettings,
     );
   }
 
   Stream<Position> watchPosition() {
-    return Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: 5,
-      ),
-    );
+    return getPositionStream();
   }
 }
