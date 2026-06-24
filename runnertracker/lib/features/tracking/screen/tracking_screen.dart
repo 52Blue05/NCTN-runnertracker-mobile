@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
+import '../../../core/constants/api_constants.dart';
 import '../../../core/constants/app_colors.dart';
 import '../provider/tracking_provider.dart';
 
@@ -18,7 +19,7 @@ class TrackingScreen extends ConsumerStatefulWidget {
 class _TrackingScreenState extends ConsumerState<TrackingScreen> {
   static const LatLng _defaultTarget = LatLng(21.0278, 105.8342);
 
-  GoogleMapController? _mapController;
+  MapLibreMapController? _mapController;
   StreamSubscription<Position>? _positionSubscription;
   Position? _currentPosition;
   bool _isLoadingLocation = true;
@@ -140,38 +141,41 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
     });
   }
 
+  void _onMapCreated(MapLibreMapController controller) {
+    _mapController = controller;
+    final position = _currentPosition;
+    if (position != null) {
+      _animateToPosition(position);
+    }
+  }
+
+  void _onStyleLoaded() {
+    // Bật hiển thị vị trí user (chấm xanh) khi style đã load
+    _mapController?.updateMyLocationTrackingMode(
+      MyLocationTrackingMode.tracking,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final markers = <Marker>{
-      if (_currentPosition != null)
-        Marker(
-          markerId: const MarkerId('current_location'),
-          position: _cameraTarget,
-          infoWindow: const InfoWindow(title: 'Vị trí hiện tại'),
-        ),
-    };
-
     return Scaffold(
       appBar: AppBar(title: const Text('Theo dõi GPS')),
       body: Stack(
         children: [
-          GoogleMap(
+          MapLibreMap(
             initialCameraPosition: CameraPosition(
               target: _cameraTarget,
               zoom: _currentPosition == null ? 13 : 17,
             ),
-            markers: markers,
+            styleString: ApiConstants.goongStyleUrl,
             myLocationEnabled: _locationEnabled,
-            myLocationButtonEnabled: _locationEnabled,
-            zoomControlsEnabled: false,
-            mapToolbarEnabled: false,
-            onMapCreated: (controller) {
-              _mapController = controller;
-              final position = _currentPosition;
-              if (position != null) {
-                _animateToPosition(position);
-              }
-            },
+            myLocationTrackingMode: _locationEnabled
+                ? MyLocationTrackingMode.tracking
+                : MyLocationTrackingMode.none,
+            myLocationRenderMode: MyLocationRenderMode.compass,
+            onMapCreated: _onMapCreated,
+            onStyleLoadedCallback: _onStyleLoaded,
+            trackCameraPosition: true,
           ),
           Positioned(
             left: 16,

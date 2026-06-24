@@ -46,9 +46,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     if (success) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Đăng nhập thành công')));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(builder: (_) => const TrackingScreen()),
+      );
     }
   }
 

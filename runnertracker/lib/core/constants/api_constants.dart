@@ -13,4 +13,15 @@ class ApiConstants {
   static const String leaderboard = '/leaderboard';
   static const String events = '/events';
   static const String orders = '/orders';
+
+  // ── Goong Maps ──────────────────────────────────────────────
+  // Maptiles key: dùng để hiển thị bản đồ (lấy từ https://account.goong.io)
+  static const String goongMapKey = 'G4k6mKr143bFQxkNhPKrCtsUJibuvJ78CKBtqsga';
+
+  // API key: dùng cho Geocoding, Directions, Autocomplete (nếu cần)
+  static const String goongApiKey = 'YOUR_GOONG_API_KEY';
+
+  // Style URL của Goong (dùng với MapLibre)
+  static String get goongStyleUrl =>
+      'https://tiles.goong.io/assets/goong_map_web.json?api_key=$goongMapKey';
 }
