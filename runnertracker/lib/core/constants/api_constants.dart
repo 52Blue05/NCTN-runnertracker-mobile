@@ -1,7 +1,7 @@
 class ApiConstants {
   const ApiConstants._();
 
-  static const String baseUrl = 'http://10.0.2.2:8081/api/v1';
+  static const String baseUrl = 'http://192.168.10.5:8081/api/v1';
   static const String iosSimulatorBaseUrl = 'http://localhost:8081/api/v1';
   static const String productionBaseUrl = 'https://your-domain.com/api/v1';
 
@@ -19,7 +19,7 @@ class ApiConstants {
   static const String goongMapKey = 'G4k6mKr143bFQxkNhPKrCtsUJibuvJ78CKBtqsga';
 
   // API key: dùng cho Geocoding, Directions, Autocomplete (nếu cần)
-  static const String goongApiKey = 'YOUR_GOONG_API_KEY';
+  static const String goongApiKey = '8oGIzTGkN4Mh9vcsBsR51MzRNqiNxsqwjUuws6r7';
 
   // Style URL của Goong (dùng với MapLibre)
   static String get goongStyleUrl =>
