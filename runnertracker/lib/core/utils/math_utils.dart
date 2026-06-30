@@ -1,16 +1,15 @@
 import 'dart:math' as math;
-import 'package:maplibre_gl/maplibre_gl.dart';
 
 class MathUtils {
   static const double earthRadiusKm = 6371.0;
 
   /// Tính khoảng cách giữa 2 điểm (km) theo công thức Haversine
-  static double haversineDistance(LatLng a, LatLng b) {
-    final dLat = _toRadians(b.latitude - a.latitude);
-    final dLon = _toRadians(b.longitude - a.longitude);
+  static double haversineDistance(double lat1Deg, double lon1Deg, double lat2Deg, double lon2Deg) {
+    final dLat = _toRadians(lat2Deg - lat1Deg);
+    final dLon = _toRadians(lon2Deg - lon1Deg);
 
-    final lat1 = _toRadians(a.latitude);
-    final lat2 = _toRadians(b.latitude);
+    final lat1 = _toRadians(lat1Deg);
+    final lat2 = _toRadians(lat2Deg);
 
     final sinDLat = math.sin(dLat / 2);
     final sinDLon = math.sin(dLon / 2);

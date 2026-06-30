@@ -6,6 +6,7 @@ import '../../../core/constants/api_constants.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/math_utils.dart';
 import '../provider/tracking_provider.dart';
+import 'run_summary_screen.dart';
 
 class TrackingScreen extends ConsumerStatefulWidget {
   const TrackingScreen({super.key});
@@ -191,7 +192,29 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
               onStart: notifier.startRun,
               onPause: notifier.pauseRun,
               onResume: notifier.resumeRun,
-              onStop: notifier.stopRun,
+              onStop: () async {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => const Center(child: CircularProgressIndicator()),
+                );
+                
+                final result = await notifier.stopRun();
+                
+                if (context.mounted) {
+                  Navigator.of(context).pop(); // Đóng loading dialog
+                  if (result != null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => RunSummaryScreen(
+                          session: result.session,
+                          syncedSuccessfully: result.syncedSuccessfully,
+                        ),
+                      ),
+                    );
+                  }
+                }
+              },
             ),
           ),
         ],

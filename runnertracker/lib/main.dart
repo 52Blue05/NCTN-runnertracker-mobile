@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/constants/app_colors.dart';
+import 'core/services/background_tracking_service.dart';
 import 'features/auth/screen/login_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Cấu hình background service (chỉ configure, chưa start)
+  await initializeBackgroundService();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 

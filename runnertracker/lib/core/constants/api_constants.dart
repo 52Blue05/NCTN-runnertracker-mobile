@@ -1,7 +1,7 @@
 class ApiConstants {
   const ApiConstants._();
 
-  static const String baseUrl = 'http://192.168.10.5:8081/api/v1';
+  static const String baseUrl = 'http://192.168.10.10:8081/api/v1';
   static const String iosSimulatorBaseUrl = 'http://localhost:8081/api/v1';
   static const String productionBaseUrl = 'https://your-domain.com/api/v1';
 
