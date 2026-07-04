@@ -110,8 +110,11 @@ class TrackingNotifier extends Notifier<TrackingState> {
         return LatLng((c['lat'] as num).toDouble(), (c['lng'] as num).toDouble());
       }).toList();
 
+      final String? startTimeStr = event['startTime'];
+
       state = state.copyWith(
         runState: newState,
+        startTime: startTimeStr != null ? DateTime.tryParse(startTimeStr) : state.startTime,
         elapsedSeconds: event['elapsedSeconds'] ?? 0,
         totalDistanceKm: (event['totalDistanceKm'] as num?)?.toDouble() ?? 0.0,
         stepCount: event['stepCount'] ?? 0,
@@ -169,6 +172,7 @@ class TrackingNotifier extends Notifier<TrackingState> {
     service.invoke('start', {
       'lat': state.currentPosition!.latitude,
       'lng': state.currentPosition!.longitude,
+      'startTime': state.startTime!.toIso8601String(),
     });
 
     // Forward GPS updates to the background service

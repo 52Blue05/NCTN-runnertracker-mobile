@@ -41,6 +41,7 @@ void onStart(ServiceInstance service) async {
   int? initialSteps;
   int lastSteps = 0;
   bool ignoreNextDistance = false;
+  String? startTimeIso;
 
   Timer? timer;
 
@@ -53,6 +54,7 @@ void onStart(ServiceInstance service) async {
       'totalDistanceKm': totalDistanceKm,
       'stepCount': stepCount,
       'coordinates': coordinates,
+      'startTime': startTimeIso,
     });
   }
 
@@ -78,9 +80,14 @@ void onStart(ServiceInstance service) async {
     initialSteps = null;
     lastSteps = 0;
     ignoreNextDistance = false;
-    // optional initial coordinate from UI
-    if (event != null && event['lat'] != null && event['lng'] != null) {
-      coordinates.add({'lat': event['lat'], 'lng': event['lng']});
+    // optional initial coordinate and time from UI
+    if (event != null) {
+      if (event['lat'] != null && event['lng'] != null) {
+        coordinates.add({'lat': event['lat'], 'lng': event['lng']});
+      }
+      if (event['startTime'] != null) {
+        startTimeIso = event['startTime'];
+      }
     }
     startTimer();
     broadcastState();

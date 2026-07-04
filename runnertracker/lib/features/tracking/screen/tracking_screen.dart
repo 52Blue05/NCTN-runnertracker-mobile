@@ -55,9 +55,6 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
 
   void _onStyleLoaded() {
     _styleLoaded = true;
-    _mapController?.updateMyLocationTrackingMode(
-      MyLocationTrackingMode.tracking,
-    );
   }
 
   Future<void> _animateToPosition(double lat, double lng) async {
@@ -173,10 +170,8 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
               zoom: state.currentPosition == null ? 13 : 17,
             ),
             styleString: ApiConstants.goongStyleUrl,
-            myLocationEnabled: state.currentPosition != null,
-            myLocationTrackingMode: state.currentPosition != null
-                ? MyLocationTrackingMode.tracking
-                : MyLocationTrackingMode.none,
+            myLocationEnabled: true,
+            myLocationTrackingMode: MyLocationTrackingMode.tracking,
             myLocationRenderMode: MyLocationRenderMode.compass,
             onMapCreated: _onMapCreated,
             onStyleLoadedCallback: _onStyleLoaded,

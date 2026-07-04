@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../tracking/screen/tracking_screen.dart';
+import '../../../shared/main_screen.dart';
 import '../provider/auth_provider.dart';
 import 'register_screen.dart';
 
@@ -47,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (success) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(builder: (_) => const TrackingScreen()),
+        MaterialPageRoute<void>(builder: (_) => const MainScreen()),
       );
     }
   }
