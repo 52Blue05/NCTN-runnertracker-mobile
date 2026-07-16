@@ -42,6 +42,9 @@ void onStart(ServiceInstance service) async {
   int lastSteps = 0;
   bool ignoreNextDistance = false;
   String? startTimeIso;
+  double lastGpsAccuracy = 0.0;
+  bool gpsWeak = false;
+  DateTime? lastLocationTime;
 
   Timer? timer;
 
@@ -55,6 +58,8 @@ void onStart(ServiceInstance service) async {
       'stepCount': stepCount,
       'coordinates': coordinates,
       'startTime': startTimeIso,
+      'gpsAccuracy': lastGpsAccuracy,
+      'gpsWeak': gpsWeak,
     });
   }
 
@@ -125,7 +130,18 @@ void onStart(ServiceInstance service) async {
     final double lat = (event['lat'] as num).toDouble();
     final double lng = (event['lng'] as num).toDouble();
     final double accuracy = (event['accuracy'] as num).toDouble();
-    if (accuracy > 25) return;
+
+    // Cập nhật trạng thái GPS quality
+    lastGpsAccuracy = accuracy;
+    gpsWeak = accuracy > 30;
+
+    // Bỏ qua điểm nếu accuracy > 30m
+    if (accuracy > 30) {
+      broadcastState(); // Vẫn broadcast để UI cập nhật icon cảnh báo
+      return;
+    }
+
+    final now = DateTime.now();
 
     if (coordinates.isNotEmpty && !ignoreNextDistance) {
       final last = coordinates.last;
@@ -133,12 +149,23 @@ void onStart(ServiceInstance service) async {
         last['lat']!, last['lng']!,
         lat, lng,
       );
-      final distanceMeters = distanceKm * 1000;
-      final maxDist = (45 * 1000 / 3600) * 5; // max 45km/h in 5s
-      if (distanceMeters > maxDist) return;
+
+      // Giới hạn tốc độ: loại bỏ nếu > 30 km/h
+      if (lastLocationTime != null) {
+        final dtSeconds = now.difference(lastLocationTime!).inMilliseconds / 1000.0;
+        if (dtSeconds > 0) {
+          final speedKmh = (distanceKm / dtSeconds) * 3600;
+          if (speedKmh > 30) {
+            lastLocationTime = now;
+            return; // Bỏ qua điểm bất thường
+          }
+        }
+      }
+
       totalDistanceKm += distanceKm;
     }
     ignoreNextDistance = false;
+    lastLocationTime = now;
     coordinates.add({'lat': lat, 'lng': lng});
     broadcastState();
   });

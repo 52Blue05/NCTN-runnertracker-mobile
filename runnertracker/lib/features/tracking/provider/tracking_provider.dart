@@ -10,6 +10,7 @@ import '../model/run_session_model.dart';
 import '../service/location_service.dart';
 import '../service/run_session_service.dart';
 import '../../../core/storage/local_run_database.dart';
+import '../../../core/services/sync_service.dart';
 
 final locationServiceProvider = Provider<LocationService>((ref) {
   return LocationService();
@@ -24,7 +25,9 @@ class TrackingState {
   final double totalDistanceKm;
   final int stepCount;
   final List<LatLng> coordinates;
-  final Position? currentPosition; // Chỉ dùng cho việc pan camera
+  final Position? currentPosition;
+  final double gpsAccuracy;
+  final bool gpsWeak;
 
   TrackingState({
     this.runState = RunState.stopped,
@@ -34,6 +37,8 @@ class TrackingState {
     this.stepCount = 0,
     this.coordinates = const [],
     this.currentPosition,
+    this.gpsAccuracy = 0.0,
+    this.gpsWeak = false,
   });
 
   bool get isRunning => runState == RunState.running;
@@ -47,6 +52,8 @@ class TrackingState {
     int? stepCount,
     List<LatLng>? coordinates,
     Position? currentPosition,
+    double? gpsAccuracy,
+    bool? gpsWeak,
   }) {
     return TrackingState(
       runState: runState ?? this.runState,
@@ -56,6 +63,8 @@ class TrackingState {
       stepCount: stepCount ?? this.stepCount,
       coordinates: coordinates ?? this.coordinates,
       currentPosition: currentPosition ?? this.currentPosition,
+      gpsAccuracy: gpsAccuracy ?? this.gpsAccuracy,
+      gpsWeak: gpsWeak ?? this.gpsWeak,
     );
   }
 }
@@ -119,6 +128,8 @@ class TrackingNotifier extends Notifier<TrackingState> {
         totalDistanceKm: (event['totalDistanceKm'] as num?)?.toDouble() ?? 0.0,
         stepCount: event['stepCount'] ?? 0,
         coordinates: newCoordinates,
+        gpsAccuracy: (event['gpsAccuracy'] as num?)?.toDouble() ?? 0.0,
+        gpsWeak: event['gpsWeak'] ?? false,
         // Update currentPosition based on the last coordinate from background
         currentPosition: newCoordinates.isNotEmpty 
           ? Position(
@@ -271,6 +282,8 @@ class TrackingNotifier extends Notifier<TrackingState> {
       // Lưu local nếu lỗi
       final db = LocalRunDatabase();
       await db.savePendingRun(session);
+      // Cập nhật badge pending count
+      ref.read(syncProvider.notifier).refreshPendingCount();
     }
 
     return (session: session, syncedSuccessfully: synced);

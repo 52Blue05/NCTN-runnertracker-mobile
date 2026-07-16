@@ -178,6 +178,36 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
             trackCameraPosition: true,
           ),
 
+          // GPS weak warning
+          if (state.isRunning && state.gpsWeak)
+            Positioned(
+              top: 12,
+              left: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.orange[800],
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: const [
+                    BoxShadow(color: Color(0x40000000), blurRadius: 6, offset: Offset(0, 2)),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.gps_off, color: Colors.white, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'GPS yếu (${state.gpsAccuracy.toStringAsFixed(0)}m) — Các điểm không chính xác sẽ bị bỏ qua',
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
           Positioned(
             left: 16,
             right: 16,

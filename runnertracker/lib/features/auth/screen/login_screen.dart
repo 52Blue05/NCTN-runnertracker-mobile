@@ -231,7 +231,7 @@ class _LoggedInPanel extends ConsumerWidget {
         FilledButton.icon(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const TrackingScreen()),
+              MaterialPageRoute<void>(builder: (_) => const MainScreen()),
             );
           },
           icon: const Icon(Icons.map_outlined),

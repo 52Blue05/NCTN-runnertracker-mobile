@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/provider/auth_provider.dart';
+import '../../../shared/widgets/empty_state_widget.dart';
+import '../../../shared/widgets/skeleton_list_widget.dart';
 import '../model/leaderboard_entry_model.dart';
 import '../provider/leaderboard_provider.dart';
 
@@ -64,23 +66,32 @@ class _LeaderboardList extends ConsumerWidget {
     return leaderboardAsync.when(
       data: (entries) {
         if (entries.isEmpty) {
-          return const Center(child: Text('Chưa có dữ liệu chạy bộ'));
+          return EmptyStateWidget(
+            icon: Icons.emoji_events_outlined,
+            title: 'Chưa có dữ liệu',
+            message: 'Bảng xếp hạng đang trống.\nHãy là người đầu tiên ghi danh!',
+            actionText: 'Làm mới',
+            onAction: () => ref.refresh(leaderboardProvider(period).future),
+          );
         }
 
-        return ListView.builder(
-          itemCount: entries.length,
-          itemBuilder: (context, index) {
-            final entry = entries[index];
-            final isMe = currentUser != null && entry.userId == currentUser.id;
+        return RefreshIndicator(
+          onRefresh: () async => ref.refresh(leaderboardProvider(period).future),
+          child: ListView.builder(
+            itemCount: entries.length,
+            itemBuilder: (context, index) {
+              final entry = entries[index];
+              final isMe = currentUser != null && entry.userId == currentUser.id;
 
-            return _LeaderboardTile(
-              entry: entry,
-              isMe: isMe,
-            );
-          },
+              return _LeaderboardTile(
+                entry: entry,
+                isMe: isMe,
+              );
+            },
+          ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const SkeletonListWidget(itemCount: 10, itemHeight: 70),
       error: (err, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -115,7 +126,7 @@ class _LeaderboardTile extends StatelessWidget {
     if (entry.rank == 3) rankColor = Colors.brown[300];
 
     return Container(
-      color: isMe ? Theme.of(context).primaryColor.withOpacity(0.1) : null,
+      color: isMe ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : null,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [

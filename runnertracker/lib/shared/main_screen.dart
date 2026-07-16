@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../events/screen/events_screen.dart';
-import '../history/screen/history_screen.dart';
-import '../leaderboard/screen/leaderboard_screen.dart';
-import '../tracking/screen/tracking_screen.dart';
+import '../features/events/screen/events_screen.dart';
+import '../features/history/screen/history_screen.dart';
+import '../features/leaderboard/screen/leaderboard_screen.dart';
+import '../features/orders/screen/order_screen.dart';
+import '../features/tracking/screen/tracking_screen.dart';
+import 'connection_status_wrapper.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,14 +22,17 @@ class _MainScreenState extends State<MainScreen> {
     const HistoryScreen(),
     const LeaderboardScreen(),
     const EventsScreen(),
+    const OrderScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
+      body: ConnectionStatusWrapper(
+        child: IndexedStack(
+          index: _currentIndex,
+          children: _screens,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -56,6 +61,11 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.event_outlined),
             activeIcon: Icon(Icons.event),
             label: 'Sự kiện',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag_outlined),
+            activeIcon: Icon(Icons.shopping_bag),
+            label: 'Đặt hàng',
           ),
         ],
       ),
