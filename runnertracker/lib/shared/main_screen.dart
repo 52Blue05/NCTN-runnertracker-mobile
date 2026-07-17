@@ -4,6 +4,7 @@ import '../features/events/screen/events_screen.dart';
 import '../features/history/screen/history_screen.dart';
 import '../features/leaderboard/screen/leaderboard_screen.dart';
 import '../features/orders/screen/order_screen.dart';
+import '../features/profile/screen/profile_screen.dart';
 import '../features/tracking/screen/tracking_screen.dart';
 import 'connection_status_wrapper.dart';
 
@@ -23,6 +24,7 @@ class _MainScreenState extends State<MainScreen> {
     const LeaderboardScreen(),
     const EventsScreen(),
     const OrderScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -34,38 +36,43 @@ class _MainScreenState extends State<MainScreen> {
           children: _screens,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.run_circle_outlined),
-            activeIcon: Icon(Icons.run_circle),
+            selectedIcon: Icon(Icons.run_circle),
             label: 'Chạy',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.history),
+            selectedIcon: Icon(Icons.history),
             label: 'Lịch sử',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.leaderboard_outlined),
-            activeIcon: Icon(Icons.leaderboard),
+            selectedIcon: Icon(Icons.leaderboard),
             label: 'Xếp hạng',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.event_outlined),
-            activeIcon: Icon(Icons.event),
+            selectedIcon: Icon(Icons.event),
             label: 'Sự kiện',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.shopping_bag_outlined),
-            activeIcon: Icon(Icons.shopping_bag),
+            selectedIcon: Icon(Icons.shopping_bag),
             label: 'Đặt hàng',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Tài khoản',
           ),
         ],
       ),
